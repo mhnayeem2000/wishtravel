@@ -4,11 +4,43 @@
 {% block content %}
     <div class="container sample" style="margin-top: 200px;">
         <div class="row">
+                <section class="search-sec">
+                    <div class="container">
+                        <form action="#" method="post" novalidate="novalidate">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-12 p-1">
+                                            <input type="text" class="form-control search-slt" placeholder="Enter Own Country">
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 p-1">
+                                            <input type="text" class="form-control search-slt" placeholder="Enter Your destination Country">
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 p-1">
+                                            <select class="form-control search-slt" id="exampleFormControlSelect1">
+                                                <option>Select Season</option>
+                                                <option>Summer</option>
+                                                <option>Rainy Season</option>
+                                                <option>Autumn</option>
+                                                <option>Late Autumn</option>
+                                                <option>Winter</option>
+                                                <option>Spring</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 p-1">
+                                            <button type="button" class="btn btn-danger wrn-btn">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
             <div class="col-md-4">
                 <div class="card">
                     <article class="card-group-item">
                         <header class="card-header">
-                            <h6 class="title">Range input</h6>
+                            <h6 class="title">Cost Range</h6>
                         </header>
                         <div class="filter-content">
                             <div class="card-body">
@@ -28,14 +60,14 @@
 
                     <article class="card-group-item">
                         <header class="card-header">
-                            <h6 class="title">Selection</h6>
+                            <h6 class="title">continent </h6>
                         </header>
                         <div class="filter-content">
                             <div class="card-body">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="check1">
                                     <label class="form-check-label" for="check1">
-                                        Samsung
+                                        Asia
                                         <span class="badge bg-light text-dark float-end">52</span>
                                     </label>
                                 </div>
@@ -43,7 +75,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="check2">
                                     <label class="form-check-label" for="check2">
-                                        BlackBerry
+                                        North America
                                         <span class="badge bg-light text-dark float-end">132</span>
                                     </label>
                                 </div>
@@ -51,7 +83,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="check3">
                                     <label class="form-check-label" for="check3">
-                                        Samsung
+                                        South America
                                         <span class="badge bg-light text-dark float-end">17</span>
                                     </label>
                                 </div>
@@ -59,10 +91,26 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="check4">
                                     <label class="form-check-label" for="check4">
-                                        Other Brand
+                                        Africa
                                         <span class="badge bg-light text-dark float-end">7</span>
                                     </label>
                                 </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="check3">
+                                    <label class="form-check-label" for="check3">
+                                        Europe
+                                        <span class="badge bg-light text-dark float-end">17</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="check3">
+                                    <label class="form-check-label" for="check3">
+                                        Antarctica
+                                        <span class="badge bg-light text-dark float-end">17</span>
+                                    </label>
+                                </div>
+
                             </div>
                         </div>
                     </article>
@@ -71,6 +119,7 @@
 
             </div>
             <div class="col-md-5">
+
                 <form method="POST" action="{% url 'travel_ai' %}">
                 {% csrf_token %}
                 <input type="text" name="query" placeholder="Ask for trip suggestions..." class="form-control" required>

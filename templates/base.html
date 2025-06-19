@@ -41,7 +41,7 @@
   <header class="header" data-header>
     <div class="container">
 
-      <a href="#" class="logo">
+      <a href="{% url 'home' %}" class="logo">
         <img src="{% static 'logo.png' %}" alt="WishTravel logo">
       </a>
 
@@ -55,7 +55,7 @@
           <ul class="navbar-list">
 
             <li>
-              <a href="#home" class="navbar-link" data-navbar-link>Home</a>
+              <a href="{% url 'home' %}" class="navbar-link" data-navbar-link>Home</a>
             </li>
 
             <li>
@@ -78,10 +78,10 @@
         </div>
       </nav>
 
-      <button class="btn btn-info">
+      <button class="btn btn-danger header-btn">
         <a href="{% url 'travel_ai' %}">AI Travel Guide</a>
 
-        <ion-icon name="chevron-forward-outline"></ion-icon>
+        <ion-icon name="airplane" style = "color : white;"></ion-icon>
       </button>
 
     </div>

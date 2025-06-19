@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from . import views
 urlpatterns = [
-    path('', views.index),  
+    path('', views.index, name='home'),  
     path('travel/', views.travel_ai, name='travel_ai'),
 ]
 if settings.DEBUG:
