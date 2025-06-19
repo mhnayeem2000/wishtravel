@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block content %}
+    <div class="container" style="margin-top: 200px;">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <article class="card-group-item">
+                        <header class="card-header">
+                            <h6 class="title">Range input</h6>
+                        </header>
+                        <div class="filter-content">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="minInput" class="form-label">Min</label>
+                                        <input type="number" class="form-control" id="minInput" placeholder="$0">
+                                    </div>
+                                    <div class="col-md-6 mb-3 text-end">
+                                        <label for="maxInput" class="form-label">Max</label>
+                                        <input type="number" class="form-control" id="maxInput" placeholder="$10,000">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card-group-item">
+                        <header class="card-header">
+                            <h6 class="title">Selection</h6>
+                        </header>
+                        <div class="filter-content">
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="check1">
+                                    <label class="form-check-label" for="check1">
+                                        Samsung
+                                        <span class="badge bg-light text-dark float-end">52</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="check2">
+                                    <label class="form-check-label" for="check2">
+                                        BlackBerry
+                                        <span class="badge bg-light text-dark float-end">132</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="check3">
+                                    <label class="form-check-label" for="check3">
+                                        Samsung
+                                        <span class="badge bg-light text-dark float-end">17</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="check4">
+                                    <label class="form-check-label" for="check4">
+                                        Other Brand
+                                        <span class="badge bg-light text-dark float-end">7</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+
+            </div>
+            <div class="col-md-5">
+                <form method="POST" action="{% url 'travel_ai' %}">
+                {% csrf_token %}
+                <input type="text" name="query" placeholder="Ask for trip suggestions..." class="form-control" required>
+                <button type="submit" class="btn btn-primary mt-2">Ask</button>
+                </form>
+
+                {% if response %}
+                <div class="mt-4 p-3 bg-light border rounded">
+                    <h4>Suggested Trip Plan:</h4>
+                    <pre>{{ response }}</pre>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-md-3"></div>
+
+        </div>
+    </div>
+  
+{% endblock  %}

@@ -4,13 +4,15 @@ from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
+from dotenv import load_dotenv
+load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-r*%+pje(wpwmq@!!c1%r5#73fvk^+&xzjwf789%w-jmzzs4hw+'
+os.environ["OPENAI_API_KEY"] = "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"
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
