@@ -1,39 +1,43 @@
-import openai
 from django.conf import settings
 from django.shortcuts import render
-import os
-from dotenv import load_dotenv
-from openai import OpenAI
+import google.generativeai as genai
+
+genai.configure(api_key=settings.GOOGLE_API_KEY) 
 
 def index(request):
     return render(request, 'index.html')
 
-
-load_dotenv()  # Load .env file
-
-client = OpenAI() 
-
-
 def get_trip_info(prompt):
     try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful travel guide assistant."},
-                {"role": "user", "content": prompt}
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(
+            contents=[
+                "You are a helpful travel guide assistant.",
+                prompt
             ],
-            temperature=0.7,
-            max_tokens=1000
+            generation_config={
+                "temperature": 0.7,
+                "max_output_tokens": 1000,
+            }
         )
-        return response.choices[0].message.content
+        return response.text
     except Exception as e:
         return f"Error: {e}"
 
 def travel_ai(request):
-    response = None
+    if "chat_history" not in request.session:
+        request.session["chat_history"] = []
+
     if request.method == "POST":
         prompt = request.POST.get("query")
         if prompt:
-            response = get_trip_info(prompt)
-    
-    return render(request, "travel_info.html", {"response": response})
+            # Add user message to chat history
+            request.session["chat_history"].append({"role": "user", "content": prompt})
+
+            # Get AI response
+            ai_response = get_trip_info(prompt)
+            request.session["chat_history"].append({"role": "ai", "content": ai_response})
+
+            request.session.modified = True  # Mark session as changed
+
+    return render(request, "travel_info.html", {"chat_history": request.session.get("chat_history", [])})

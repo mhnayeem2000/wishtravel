@@ -651,3 +651,57 @@
         background: #1A4668;
     }
 }
+
+
+
+
+
+.chat-container {
+    max-width: 600px;
+    height: 500px;
+    margin: 0px auto !important;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .message {
+    max-width: 75%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    line-height: 1.4;
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .message.user {
+    background-color: #0d6efd; /* Bootstrap primary */
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+
+  .message.ai {
+    background-color: #f8f9fa; /* Bootstrap light */
+    color: #212529; /* Bootstrap body text */
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+
+  .input-area {
+    border-top: 1px solid #ddd;
+    padding: 10px 15px;
+  }
