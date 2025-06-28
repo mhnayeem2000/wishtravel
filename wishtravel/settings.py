@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'findme',
     'rest_framework',
     'corsheaders',
+     'markdownify',
 ]
 
 MIDDLEWARE = [
