@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import os
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 from dotenv import load_dotenv
@@ -124,4 +125,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 
 
-GOOGLE_API_KEY = "AIzaSyCt1iKOtXJqkAzomIgL8ZYUv7bsPoVW_0Y"
+
+GOOGLE_API_KEY = config('GOOGLE_API_KEY')
