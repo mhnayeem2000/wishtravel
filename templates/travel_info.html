@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+{% load static %}
+{% load markdownify %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #f7f8fa;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .main-wrapper {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+.sidebar {
+  width: 220px;
+  height: 100vh; 
+  background-color: #ffffff;
+  border-right: 1px solid #dee2e6;
+  transition: width 0.3s;
+  position: fixed; /* 👈 Stick to the side */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+
+  .sidebar.collapsed {
+    width: 60px;
+  }
+
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 60px;
+  }
+
+  .sidebar ul li {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    color: #212529;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .sidebar ul li:hover {
+    background-color: #f8f9fa;
+  }
+
+  .sidebar ul li.active {
+    background-color: #f1f1f1;
+    font-weight: 500;
+  }
+
+  .sidebar ul li i {
+    margin-right: 12px;
+    font-size: 18px;
+  }
+
+  .sidebar.collapsed ul li span {
+    display: none;
+  }
+
+  .sidebar-toggle {
+    position: absolute;
+    top: 15px;
+    right: -15px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Chat section styles (same as before, shortened here) */
+  .chat-wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 0;
+    overflow-y: auto;
+  }
+
+ .chat-container {
+  width: 100%;
+  width: 800px;
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: calc(90vh - 100px); /* Better than 85vh */
+  margin-top: 100px !important; /* adjust if needed */
+}
+
+  .message-area {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background-color: #fdfdfd;
+    padding-bottom: 80px;
+
+    /* Hide scrollbar for Chrome, Safari and Edge */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+  }
+  .message-area::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
+
+  .user-message .bubble {
+    background: #0d6efd;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 20px 20px 0 20px;
+    margin-left: auto;
+    max-width: 80%;
+  }
+
+  .ai-message .bubble {
+    background: #f1f3f5;
+    padding: 14px 18px;
+    border-radius: 20px 20px 20px 0;
+    color: #212529;
+    max-width: 95%;
+  }
+
+  .chat-footer form {
+    display: flex;
+    gap: 10px;
+  }
+
+  .chat-footer input[type="text"] {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+
+  .chat-footer button {
+    border-radius: 25px;
+    padding: 10px 20px;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+  }
+
+  .clear-chat {
+    text-align: right;
+    margin-bottom: 10px;
+  }
+
+  /* Chip badge style for city links */
+  .city-chip {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 4px 6px 4px 0;
+    background-color: #e0f0ff;
+    color: #0d6efd;
+    border-radius: 9999px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .city-chip:hover {
+    background-color: #cfe4ff;
+    text-decoration: none;
+  }
+ .ai-message a {
+  display: inline-block;   /* stays inline, like chips */
+  padding: 6px 12px;
+  margin: 4px 6px 4px 0;
+  background-color: #e0f0ff;
+  color: #0d6efd;
+  border-radius: 20px;
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;     /* prevents word break */
+}
+
+.ai-message a:hover {
+  background-color: #cfe4ff;
+}
+
+
+
+
+.nav-pills .nav-link {
+  border-radius: 0.375rem;
+  text-align: left;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.tab-content .form-control:focus {
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+
+/* Minimal underline tab style */
+.nav-pills .nav-link {
+  border-radius: 0;
+  border: none;
+  background: none;
+  color: #000000;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.nav-pills .nav-link:hover {
+  border-bottom: 2px solid #f10b0b;
+  background: none;
+}
+
+.nav-pills .nav-link.active {
+  border-bottom: 2px solid #ff0000;
+  color: #1e1e1e;
+  font-weight: 600;
+  background: none;
+}
+
+</style>
+
+
+
+<div class="container-fluid px-0">
+  <div class="row gx-0">
+    <!-- Sidebar -->
+    <div class="col-md-2">
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-toggle" onclick="toggleSidebar()">☰</div>
+        <ul>
+          <li class="active"><i class="bi bi-chat-dots"></i><span>AI Chat</span></li>
+          <li><i class="bi bi-chat-left-text"></i><span>
+              <div class="clear-chat">
+                <form method="POST" action="{% url 'clear_chat' %}">
+                  {% csrf_token %}
+                  <button>New Chat</button>
+                </form>
+              </div>
+          </span></li>
+          <li><i class="bi bi-calendar-event"></i><span>Calendar</span></li>
+          <li><i class="bi bi-geo-alt"></i><span>Map</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="col-md-6">
+      <div class="chat-wrapper row">
+        <div class="chat-container">
+          <div class="message-area">
+            {% for chat in chat_history %}
+              <div class="message-block {% if chat.role == 'user' %}user-message{% else %}ai-message{% endif %}">
+                <div class="bubble">
+                  {% if chat.role == 'user' %}
+                    {{ chat.content|linebreaksbr }}
+                  {% else %}
+                    {{ chat.content|markdownify|safe }}
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="chat-footer">
+            <form method="POST">
+              {% csrf_token %}
+              <input type="text" name="query" placeholder="Type your message..." required>
+              <button type="submit">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar: Image + Tabs + Booking -->
+    <div class="col-md-4 col-lg-4 px-3" style="margin-top: 160px;">
+      <div class="card shadow-sm">
+        <div class="card-body">
+
+          <!-- Top Image Gallery -->
+          <div class="mb-4">
+            <div class="d-flex gap-3">
+              <div class="img1 w-50">
+                <img src="{% static 'building.jpg' %}" class="img-fluid rounded w-100" alt="image1">
+              </div>
+              <div class="img1 w-50">
+                <img src="{% static 'snow1.jpg' %}" class="img-fluid rounded w-100" alt="image2">
+              </div>
+            </div>
+
+            <!-- Full-width image below -->
+            <div class="mt-3">
+              <img src="{% static 'all.jpg' %}" class="img-fluid rounded w-100" alt="full image">
+            </div>
+          </div>
+
+          <!-- Bottom Section with Tabs and Form -->
+          <div class="d-flex">
+            <!-- Left Column: Tabs -->
+            <div class="nav flex-column nav-pills me-3" id="v-tabs" role="tablist" aria-orientation="vertical">
+              <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab">Overview</button>
+              <button class="nav-link" id="activities-tab" data-bs-toggle="pill" data-bs-target="#activities" type="button" role="tab">Activities</button>
+              <button class="nav-link" id="tours-tab" data-bs-toggle="pill" data-bs-target="#tours" type="button" role="tab">Tours</button>
+              <button class="nav-link" id="locations-tab" data-bs-toggle="pill" data-bs-target="#locations" type="button" role="tab">Locations</button>
+            </div>
+
+            <!-- Right Column: Form Content -->
+            <div class="tab-content w-100" id="v-tabs-content">
+              <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <form class="p-3 border rounded bg-light shadow-sm">
+                  <h5 class="mb-3">Book Your Stay</h5>
+                  <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="date" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="people" class="form-label">Number of People</label>
+                    <input type="number" class="form-control" id="people" min="1" value="1" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100">Book Now</button>
+                </form>
+              </div>
+              <div class="tab-pane fade" id="activitiess" role="tabpanel">
+                <p class="p-3">List of exciting activities goes here...</p>
+              </div>
+              <div class="tab-pane fade" id="tours" role="tabpanel">
+                <p class="p-3">Tour packages and info...</p>
+              </div>
+              <div class="tab-pane fade" id="locations" role="tabpanel">
+                <p class="p-3">Popular locations and nearby spots...</p>
+              </div>
+            </div>
+          </div>
+
+        </div> <!-- .card-body -->
+      </div> <!-- .card -->
+    </div>
+
+
+
+
+  </div>
+</div>
+
+<!-- JS for collapse -->
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+  }
+
+  const messageArea = document.querySelector(".message-area");
+  messageArea.scrollTop = messageArea.scrollHeight;
+</script>
+
+<!-- Bootstrap Icons CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+{% endblock %}
