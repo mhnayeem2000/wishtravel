@@ -17,26 +17,25 @@ def highlight_city_links(text):
     except FileNotFoundError:
         city_list = ['Sydney', 'Melbourne', 'Perth']
 
-    # Sort by length to replace longer cities first
     for city in sorted(city_list, key=len, reverse=True):
         slug = city.lower().replace(" ", "-")
 
-        # If already linked, skip
+        # Skip if already linked
         if f'/city-info/{slug}' in text:
             continue
 
-        # Updated regex to match whole word only using word boundaries (\b)
         pattern = rf'\b{re.escape(city)}\b'
 
         link = (
             f'<a href="/city-info/{slug}/" '
-            f'class="badge rounded-pill bg-primary text-white text-decoration-none me-1">'
-            f' ⚲ {city} ✅ </a>'
+            f'class="city-chip">📍 {city} ✅ <i class="bi bi-chat-left-text"> </a>'
         )
+
 
         text = re.sub(pattern, link, text)
 
     return text
+
 
 
 def travel_ai(request):
@@ -53,25 +52,40 @@ def travel_ai(request):
         gemini_messages = [
             {
                 "role": "model",
-                "parts": [  # This is the one-time system prompt
+                "parts": [
                     """
-                    You are a professional and friendly travel assistant Named "WishTravel" .gretting them by your name first, make your name bold and then give a new line after that help him. The user may ask general or specific travel questions.
+        You are **WishTravel**, a professional and friendly AI travel assistant.
 
-                    If they provide no location, season, or budget dont mention it that they dont provide it,just  assume  best and most visiting places :
-                    - They are traveling from New York or London
-                    - They want a moderate-budget, fun trip
-                    - They prefer 5-7 day trips
+        When a user asks for help, first greet them by your name (e.g., "Hello! I'm **WishTravel**, your travel assistant.") and then begin planning the trip.
 
-                    Always give answers in Markdown format, with:
-                    ✅ Emoji for each section
-                    ✅ Bold section titles
-                    ✅ Skimmable layout (no long paragraphs)
-                    ✅ Bullet points for attractions, hotels, and tips
-                    ✅ Optional day-wise itinerary when applicable
+        If the user doesn't mention destination, season, or budget, assume:
+        - Departure from Bangladesh
+        - Moderate-budget
+        - 5–7 day trip
+        - Fun and culturally rich
+
+        🎯 Your goals:
+        - Suggest **real places**: hotels, restaurants, landmarks, cafés, neighborhoods
+        - Give **detailed, day-wise itinerary** for 5–7 days
+        - Mention **real restaurant names** for lunch and dinner (e.g., "Joe's Pizza", "Becco", etc.)
+        - Include **specific hotels** for staying (e.g., "Rove Downtown", "Premier Inn")
+        - Mention **popular parks, malls, museums, or districts** if applicable
+
+        📋 Format rules:
+        - Use **Markdown** (headings, bold, bullet lists)
+        - Add ✅ emoji for each section
+        - Add Emoji for each Suggestion (e.g., 🏨 for hotels, 🍽️ for food , for park )
+        - Use clear section headers: **Destination**, **Things to Do**, **Hotels**, **Food**, **Day-wise Itinerary**, **Travel Tips**
+        - Use inline links or badges for cities if mentioned (e.g., ⚲ Dubai ✅)
+
+        Avoid generic phrases — use real examples from the travel industry.
+
+        Keep your tone warm, helpful, and friendly.
                     """
                 ]
             }
         ]
+
 
         # Add previous chat turns
         for msg in request.session["chat_history"]:
@@ -90,7 +104,9 @@ def travel_ai(request):
         except Exception as e:
             ai_reply = f"Error: {e}"
 
-        ai_reply = highlight_city_links(ai_reply)
+        ai_reply = response.text
+        ai_reply = highlight_city_links(ai_reply)  # injects HTML, then passes through markdownify
+
         request.session["chat_history"].append({"role": "model", "content": ai_reply})
         request.session.modified = True
 
