@@ -18,7 +18,7 @@
 
 .sidebar {
   width: 220px;
-  height: 100vh; /* 🔥 Make it full viewport height */
+  height: 100vh; 
   background-color: #ffffff;
   border-right: 1px solid #dee2e6;
   transition: width 0.3s;
@@ -97,7 +97,7 @@
 
  .chat-container {
   width: 100%;
-  max-width: 700px;
+  width: 800px;
   background-color: #fff;
   padding: 25px;
   border-radius: 15px;
@@ -219,6 +219,29 @@
   box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
 }
 
+
+/* Minimal underline tab style */
+.nav-pills .nav-link {
+  border-radius: 0;
+  border: none;
+  background: none;
+  color: #000000;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.nav-pills .nav-link:hover {
+  border-bottom: 2px solid #f10b0b;
+  background: none;
+}
+
+.nav-pills .nav-link.active {
+  border-bottom: 2px solid #ff0000;
+  color: #1e1e1e;
+  font-weight: 600;
+  background: none;
+}
+
 </style>
 
 
@@ -275,55 +298,72 @@
     </div>
 
     <!-- Right Sidebar: Image + Tabs + Booking -->
-    <div class="col-md-4 col-lg-4 px-3" style="margin-top: 200px;">
-      <!-- Top Image Gallery -->
-      <div class="mb-4">
-        <div class="d-flex flex-wrap gap-2">
-          <img src="https://via.placeholder.com/80" class="rounded" alt="image1">
-          <img src="https://via.placeholder.com/80" class="rounded" alt="image2">
-          <img src="https://via.placeholder.com/80" class="rounded" alt="image3">
-          <img src="https://via.placeholder.com/80" class="rounded" alt="image4">
-        </div>
-      </div>
+    <div class="col-md-4 col-lg-4 px-3" style="margin-top: 160px;">
+      <div class="card shadow-sm">
+        <div class="card-body">
 
-      <!-- Bottom Section with Tabs and Form -->
-      <div class="d-flex">
-        <!-- Left Column: Tabs -->
-        <div class="nav flex-column nav-pills me-3" id="v-tabs" role="tablist" aria-orientation="vertical">
-          <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab">Overview</button>
-          <button class="nav-link" id="activities-tab" data-bs-toggle="pill" data-bs-target="#activities" type="button" role="tab">Activities</button>
-          <button class="nav-link" id="tours-tab" data-bs-toggle="pill" data-bs-target="#tours" type="button" role="tab">Tours</button>
-          <button class="nav-link" id="locations-tab" data-bs-toggle="pill" data-bs-target="#locations" type="button" role="tab">Locations</button>
-        </div>
+          <!-- Top Image Gallery -->
+          <div class="mb-4">
+            <div class="d-flex gap-3">
+              <div class="img1 w-50">
+                <img src="{% static 'building.jpg' %}" class="img-fluid rounded w-100" alt="image1">
+              </div>
+              <div class="img1 w-50">
+                <img src="{% static 'snow1.jpg' %}" class="img-fluid rounded w-100" alt="image2">
+              </div>
+            </div>
 
-        <!-- Right Column: Form Content -->
-        <div class="tab-content w-100" id="v-tabs-content">
-          <div class="tab-pane fade show active" id="overview" role="tabpanel">
-            <form class="p-3 border rounded bg-light shadow-sm">
-              <h5 class="mb-3">Book Your Stay</h5>
-              <div class="mb-3">
-                <label for="date" class="form-label">Date</label>
-                <input type="date" class="form-control" id="date" required>
+            <!-- Full-width image below -->
+            <div class="mt-3">
+              <img src="{% static 'all.jpg' %}" class="img-fluid rounded w-100" alt="full image">
+            </div>
+          </div>
+
+          <!-- Bottom Section with Tabs and Form -->
+          <div class="d-flex">
+            <!-- Left Column: Tabs -->
+            <div class="nav flex-column nav-pills me-3" id="v-tabs" role="tablist" aria-orientation="vertical">
+              <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab">Overview</button>
+              <button class="nav-link" id="activities-tab" data-bs-toggle="pill" data-bs-target="#activities" type="button" role="tab">Activities</button>
+              <button class="nav-link" id="tours-tab" data-bs-toggle="pill" data-bs-target="#tours" type="button" role="tab">Tours</button>
+              <button class="nav-link" id="locations-tab" data-bs-toggle="pill" data-bs-target="#locations" type="button" role="tab">Locations</button>
+            </div>
+
+            <!-- Right Column: Form Content -->
+            <div class="tab-content w-100" id="v-tabs-content">
+              <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <form class="p-3 border rounded bg-light shadow-sm">
+                  <h5 class="mb-3">Book Your Stay</h5>
+                  <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="date" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="people" class="form-label">Number of People</label>
+                    <input type="number" class="form-control" id="people" min="1" value="1" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100">Book Now</button>
+                </form>
               </div>
-              <div class="mb-3">
-                <label for="people" class="form-label">Number of People</label>
-                <input type="number" class="form-control" id="people" min="1" value="1" required>
+              <div class="tab-pane fade" id="activities" role="tabpanel">
+                <p class="p-3">List of exciting activities goes here...</p>
               </div>
-              <button type="submit" class="btn btn-primary w-100">Book Now</button>
-            </form>
+              <div class="tab-pane fade" id="tours" role="tabpanel">
+                <p class="p-3">Tour packages and info...</p>
+              </div>
+              <div class="tab-pane fade" id="locations" role="tabpanel">
+                <p class="p-3">Popular locations and nearby spots...</p>
+              </div>
+            </div>
           </div>
-          <div class="tab-pane fade" id="activities" role="tabpanel">
-            <p class="p-3">List of exciting activities goes here...</p>
-          </div>
-          <div class="tab-pane fade" id="tours" role="tabpanel">
-            <p class="p-3">Tour packages and info...</p>
-          </div>
-          <div class="tab-pane fade" id="locations" role="tabpanel">
-            <p class="p-3">Popular locations and nearby spots...</p>
-          </div>
-        </div>
-      </div>
+
+        </div> <!-- .card-body -->
+      </div> <!-- .card -->
     </div>
+
+
+
+
   </div>
 </div>
 
